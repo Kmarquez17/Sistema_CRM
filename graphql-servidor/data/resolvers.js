@@ -3,8 +3,17 @@ import Clientes from "../models/clientes";
 
 export const resolvers = {
   Query: {
-    getCliente: ({ id }) => {
-      return new Cliente(id, clienteDB[id]);
+    getClientes: (root, { limite }) => {
+      return Clientes.find({}).limit(limite);
+    },
+
+    getCliente: (root, { id }) => {
+      return new Promise((resolve, rejects) => {
+        Clientes.findById(id, (error, cliente) => {
+          if (error) return rejects(error);
+          else resolve(cliente);
+        });
+      });
     }
   },
   Mutation: {

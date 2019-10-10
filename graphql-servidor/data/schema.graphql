@@ -25,7 +25,18 @@ enum TipoCliente {
   PREMIUM
 }
 
+"""
+Query donde van los metodos de busquedas
+"""
 type Query {
+  """
+  Busquedas total o extarer cierta cantidad de clientes
+  """
+  getClientes(limite: Int): [Cliente]
+
+  """
+  Busqueda por cliente
+  """
   getCliente(id: ID): Cliente
 }
 
@@ -53,7 +64,7 @@ input ClienteInput {
 }
 
 """
-Mutations para crear nuevos clientes
+Mutation para crear, actualizar y eliminar clientes
 """
 type Mutation {
   # Nombre del resolver, Input con datos y valor que retorna

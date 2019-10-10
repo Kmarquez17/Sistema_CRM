@@ -4,7 +4,7 @@ const DB_URL = process.env.MONGO_URI;
 const PORT = process.env.PORT;
 
 export default {
-  connect: () => {
+  connect: (server) => {
     mongoose.Promise = global.Promise;
     mongoose
       .connect(DB_URL, {
@@ -18,7 +18,7 @@ export default {
         dbStatus = `*    DB Connection: OK\n****************************\n`;
         console.log("****************************");
         console.log("*    Starting Server");
-        console.log(`*    Port: ${PORT || 3000}`);
+        console.log(`*    Port: ${PORT || 3000} ${server}`);
         console.log(`*    Database: MongoDB`);
         console.log(dbStatus);
       })
