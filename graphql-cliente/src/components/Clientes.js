@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { CLIENTES_QUERY } from "../queries/index";
 import { Query } from "react-apollo";
 
+import { Link } from "react-router-dom";
+
 const Clientes = () => (
   <Query query={CLIENTES_QUERY}>
     {({ loading, error, data }) => {
@@ -24,9 +26,12 @@ const Clientes = () => (
                     {cliente.nombre} - {cliente.empresa}
                   </div>
                   <div className="col-md-4 d-flex justify-content-end">
-                    <a href="!#" className="btn btn-success d-block d-md-inline-block">
+                    <Link
+                      to={`/cliente/editar/${cliente.id}`}
+                      className="btn btn-success d-block d-md-inline-block"
+                    >
                       Editar Cliente
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </li>
