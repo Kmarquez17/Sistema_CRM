@@ -1,18 +1,22 @@
 import React, { Component, Fragment } from "react";
 import { CREAR_CLIENTE } from "../mutations/index";
 import { Mutation } from "react-apollo";
+
+import FormularioCliente from "./FormularioCliente";
 class NuevoCliente extends Component {
   state = {
     cliente: {
       nombre: "",
       apellido: "",
       empresa: "",
+      emails: [],
       edad: "",
-      email: "",
       tipo: ""
     },
     error: false
   };
+
+  /**handleChange capturamos los datos ingresados por el usuario */
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -23,18 +27,55 @@ class NuevoCliente extends Component {
     });
   };
 
+  /**handleChangeEmails capturamos solo los correos ingresado por el usuario */
+  handleChangeEmails = (i, e) => {
+    const { name, value } = e;
+
+    const nuevosEmails = this.state.cliente.emails.map((email, index) => {
+      if (i !== index) return email;
+      return {
+        ...email,
+        [name]: value
+      };
+    });
+
+    this.setState({
+      cliente: {
+        ...this.state.cliente,
+        emails: nuevosEmails
+      }
+    });
+  };
+
   handleSubmit = crearCliente => {
     //Sacamos el state para crear el input
-    const { nombre, apellido, empresa, email, edad, tipo } = this.state.cliente;
+    const {
+      nombre,
+      apellido,
+      empresa,
+      emails,
+      edad,
+      tipo
+    } = this.state.cliente;
+
+    //Validamos los emails tambien
+    let emailVacio = true;
+    emails.forEach(data => {
+      if (data.email.trim() === "") {
+        emailVacio = false;
+        return;
+      }
+    });
 
     // Validamos que los campos ingresados por el usuario no sean vacios
+    let edadInt = Number(edad)
     if (
       nombre.trim() === "" ||
       apellido.trim() === "" ||
       empresa.trim() === "" ||
-      email.trim() === "" ||
-      edad.trim() === "" ||
-      tipo.trim() === ""
+      edadInt <= 0 ||
+      tipo.trim() === "" ||
+      emailVacio === false
     ) {
       this.setState({ error: true });
       return;
@@ -48,8 +89,8 @@ class NuevoCliente extends Component {
       nombre,
       apellido,
       empresa,
-      email,
-      edad: Number(edad),
+      emails,
+      edad: edadInt,
       tipo
     };
 
@@ -57,114 +98,49 @@ class NuevoCliente extends Component {
     crearCliente({ variables: { input } });
   };
 
-  render() {
-    //Capturamos el error y verificar que no se haya activado, en la validacion de los campos
-    const { error } = this.state;
-    let respuesta = error ? (
-      <p className="alert alert-danger p-3 text-center">
-        Llenar todos los campos ya que son obligatorios
-      </p>
-    ) : null;
+  /**handleNuevoCampo agrega mas emails al data*/
+  handleNuevoCampo = () => {
+    this.setState({
+      cliente: {
+        ...this.state.cliente,
+        emails: this.state.cliente.emails.concat([{ email: "" }])
+      }
+    });
+  };
 
+  /** handleEliminarCampo elimina emails al data */
+  handleEliminarCampo = i => {
+    this.setState({
+      cliente: {
+        ...this.state.cliente,
+        emails: this.state.cliente.emails.filter((email, index) => i !== index)
+      }
+    });
+  };
+
+  render() {
     return (
       <Fragment>
         <h2 className="text-center">Nuevo Clientes</h2>
-        {respuesta}
-        <div className="row justify-content-center">
-          <Mutation
-            mutation={CREAR_CLIENTE}
-            //Redireccionamos a la pagina del listado de clientes
-            onCompleted={() => this.props.history.push("/")}
-          >
-            {crearCliente => (
-              <form
-                className="col-md-8 m-3"
-                onSubmit={e => {
-                  e.preventDefault();
-                  this.handleSubmit(crearCliente);
-                }}
-              >
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label>Nombre</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Nombre"
-                      name="nombre"
-                      value={this.state.cliente.nombre}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label>Apellido</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Apellido"
-                      name="apellido"
-                      value={this.state.cliente.apellido}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label>Empresa</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Empresa"
-                      name="empresa"
-                      value={this.state.cliente.empresa}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Email"
-                      name="email"
-                      value={this.state.cliente.email}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label>Edad</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Edad"
-                      name="edad"
-                      value={this.state.cliente.edad}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label>Tipo Cliente</label>
-                    <select
-                      className="form-control"
-                      name="tipo"
-                      value={this.state.cliente.tipo}
-                      onChange={this.handleChange}
-                    >
-                      <option value="">Elegir...</option>
-                      <option value="PREMIUM">PREMIUM</option>
-                      <option value="BASICO">BÁSICO</option>
-                    </select>
-                  </div>
-                </div>
-                <button type="submit" className="btn btn-success float-right">
-                  Guardar Cambios
-                </button>
-              </form>
-            )}
-          </Mutation>
-        </div>
+
+        <Mutation
+          mutation={CREAR_CLIENTE}
+          //Redireccionamos a la pagina del listado de clientes
+          onCompleted={() => this.props.history.push("/")}
+        >
+          {crearCliente => (
+            <FormularioCliente
+              handleSubmit={this.handleSubmit}
+              handleChange={this.handleChange}
+              handleChangeEmails={this.handleChangeEmails}
+              handleNuevoCampo={this.handleNuevoCampo}
+              handleEliminarCampo={this.handleEliminarCampo}
+              cliente={this.state.cliente}
+              accionMutation={crearCliente}
+              error={this.state.error}
+            />
+          )}
+        </Mutation>
       </Fragment>
     );
   }
