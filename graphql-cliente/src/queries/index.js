@@ -2,13 +2,14 @@
 import { gql } from "apollo-boost";
 
 export const CLIENTES_QUERY = gql`
-  {
-    getClientes {
+  query getClientes($limite: Int, $offset: Int) {
+    getClientes(limite: $limite, offset: $offset) {
       id
       nombre
       apellido
       empresa
     }
+    totalClientes
   }
 `;
 
@@ -19,7 +20,7 @@ export const CLIENTE_QUERY = gql`
       nombre
       apellido
       empresa
-      emails{
+      emails {
         email
       }
       edad

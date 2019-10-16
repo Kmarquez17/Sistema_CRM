@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { Query, Mutation } from "react-apollo";
 
-import { CLIENTE_QUERY } from "../queries/index";
-import { ACTUALIZAR_CLIENTE } from "../mutations/index";
+import { CLIENTE_QUERY } from "../../queries/index";
+import { ACTUALIZAR_CLIENTE } from "../../mutations/index";
 
-import FormularioCliente from "./FormularioCliente";
+import FormularioCliente from "../../components/Formularios/FormularioCliente";
 
 class Formulario extends Component {
   state = {

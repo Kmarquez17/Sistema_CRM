@@ -31,14 +31,20 @@ Query donde van los metodos de busquedas
 """
 type Query {
   """
-  Busquedas total o extarer cierta cantidad de clientes
+    Busquedas total o extarer cierta cantidad de clientes
   """
-  getClientes(limite: Int): [Cliente]
+  getClientes(limite: Int, offset: Int): [Cliente]
 
   """
-  Busqueda por cliente
+    Busqueda por cliente
   """
   getCliente(id: ID): Cliente
+
+
+  """
+    Nos permite obtener las cantidad total de todos los clientes
+  """
+  totalClientes : String
 }
 
 input EmailInput {

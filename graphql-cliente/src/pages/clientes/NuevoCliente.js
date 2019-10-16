@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
-import { CREAR_CLIENTE } from "../mutations/index";
+import { CREAR_CLIENTE } from "../../mutations/index";
 import { Mutation } from "react-apollo";
 
-import FormularioCliente from "./FormularioCliente";
+import FormularioCliente from "../../components/Formularios/FormularioCliente";
 class NuevoCliente extends Component {
   state = {
     cliente: {

@@ -6,9 +6,9 @@ import { HashRouter, Switch, Route } from "react-router-dom";
 
 //Componentes
 import Header from "./components/Header";
-import Clientes from "./components/Clientes";
-import NuevoCliente from "./components/NuevoCliente";
-import EditarCliente from "./components/EditarCliente";
+import Clientes from "./pages/clientes/Clientes";
+import NuevoCliente from "./pages/clientes/NuevoCliente";
+import EditarCliente from "./pages/clientes/EditarCliente";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
