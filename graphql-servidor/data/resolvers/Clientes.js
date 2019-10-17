@@ -1,7 +1,7 @@
 // import mongoose from "mongoose";
-import Clientes from "../models/clientes";
+import Clientes from "../../models/clientes";
 
-export const resolvers = {
+export const ClienteResolvers = {
   Query: {
     getClientes: (root, { limite, offset }) => {
       return Clientes.find({})

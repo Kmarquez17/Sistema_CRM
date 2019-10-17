@@ -1,0 +1,27 @@
+type Producto {
+  id: ID
+  nombre: String
+  precio: Int
+  stock: Int
+}
+
+type Query {
+  """
+    Busqueda del producto por su Id
+  """
+  getProductos(id: ID): Producto
+}
+
+input ProductoInput {
+  id: ID
+  nombre: String!
+  precio: Int!
+  stock: Int!
+}
+
+type Mutation {
+  """
+  Te permite crear nuevos productos
+  """
+  crearProducto(input: ProductoInput): Producto
+}

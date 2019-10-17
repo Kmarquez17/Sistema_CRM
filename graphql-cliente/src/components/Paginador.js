@@ -2,10 +2,23 @@ import React, { Component } from "react";
 
 class Paginador extends Component {
   state = {
-    paginador: {
-      paginas: Math.ceil(Number(this.props.totalClientes) / this.props.limite)
-    }
+    paginas: 0
   };
+
+  static getDerivedStateFromProps(nextProps) {
+    const { paginas, pagActual, paginacionReinicio } = nextProps;
+    console.log("CANT", paginas);
+    console.log("ACTUAL", pagActual);
+    if (paginas < pagActual) {
+      //Si la cantidad de paginas es menor a la actual, es por que se quedo en la ultima pagina por ende pasarlo
+      // a la anterior
+      paginacionReinicio(paginas);
+    }
+
+    return {
+      paginas: paginas
+    };
+  }
 
   render() {
     const { pagActual } = this.props;
@@ -21,7 +34,7 @@ class Paginador extends Component {
         </button>
       ) : null;
 
-    const { paginas } = this.state.paginador;
+    const { paginas } = this.state;
     const btnSiguiente =
       pagActual !== paginas ? (
         <button
@@ -32,7 +45,6 @@ class Paginador extends Component {
           Siguiente &raquo;
         </button>
       ) : null;
-
     return (
       <div className="mt-5 d-flex justify-content-center">
         {btnAnterior}

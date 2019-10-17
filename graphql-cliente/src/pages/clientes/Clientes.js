@@ -11,7 +11,7 @@ import Buscador from "../../components/Buscador";
 class Clientes extends Component {
   state = {
     paginador: {
-      limite: 5,
+      limite: 2,
       pagActual: 1,
       offset: 0
     },
@@ -38,6 +38,16 @@ class Clientes extends Component {
     });
   };
 
+  paginacionReinicio = pagActual => {
+    this.setState({
+      paginador: {
+        ...this.state.paginador,
+        offset: this.state.paginador.offset - this.state.paginador.limite,
+        pagActual: pagActual
+      }
+    });
+  };
+
   handleChangeProps = busqueda => {
     this.setState({ filtro: busqueda });
   };
@@ -55,7 +65,11 @@ class Clientes extends Component {
         {({ loading, error, data, startPolling, stopPolling }) => {
           if (loading) return "Cargando...!";
           if (error) return `Error : ${error}`;
-
+          let cantidadPag = Math.ceil(
+            Number(data.totalClientes) / this.state.paginador.limite
+          );
+          let paginaActual =
+            cantidadPag > 0 ? this.state.paginador.pagActual : 0;
           return (
             <Fragment>
               <h2 className="mt-2 text-center">Listados de Clientes</h2>
@@ -115,11 +129,11 @@ class Clientes extends Component {
                 })}
               </ul>
               <Paginador
-                limite={this.state.paginador.limite}
-                pagActual={this.state.paginador.pagActual}
-                totalClientes={data.totalClientes}
+                pagActual={paginaActual}
+                paginas={cantidadPag}
                 paginaSiguiente={this.paginaSiguiente}
                 paginaAnterior={this.paginaAnterior}
+                paginacionReinicio={this.paginacionReinicio}
               />
             </Fragment>
           );

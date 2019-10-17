@@ -126,7 +126,7 @@ class NuevoCliente extends Component {
         <Mutation
           mutation={CREAR_CLIENTE}
           //Redireccionamos a la pagina del listado de clientes
-          onCompleted={() => this.props.history.push("/")}
+          onCompleted={() => this.props.history.goBack()}
         >
           {crearCliente => (
             <FormularioCliente

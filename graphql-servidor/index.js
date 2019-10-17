@@ -1,14 +1,15 @@
-import express from "express";
 import "dotenv/config";
-
+import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { typeDefs } from "./data/schema";
-import { resolvers } from "./data/resolvers";
 
+// import typeDefs from "./data/types";
+// import resolvers from "./data/resolvers";
+
+import schema from "./data/index";
 import initMongo from "./data/db";
 
 const app = express();
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
 
 // servidor de apollo
 server.applyMiddleware({ app });
@@ -17,6 +18,5 @@ server.applyMiddleware({ app });
 app.set("port", process.env.PORT || 3000);
 
 app.listen(app.get("port"));
-
 
 initMongo.connect(server.graphqlPath);
