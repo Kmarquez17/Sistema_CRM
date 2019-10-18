@@ -157,9 +157,11 @@ class EditarCliente extends Component {
         <Query query={CLIENTE_QUERY} variables={{ id }}>
           {({ loading, error, data, refetch }) => {
             if (loading) return "Cargando...!";
-            if (error) return `Error : ${error}`;
-            if (data.getCliente === null)
-              return <h5 className="text-center">Usuario no encontrado</h5>;
+            const err = error
+              ? error.graphQLErrors[0].message
+              : "Cliente no existente...!";
+            if (error || data.getCliente === null)
+              return <h5 className="text-center">{err}</h5>;
 
             return (
               <Formulario

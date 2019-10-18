@@ -7,9 +7,14 @@ type Producto {
 
 type Query {
   """
-    Busqueda del producto por su Id
+  Busqueda total de los productos con un filtro de limite
+  ejemplo (0-10, 10-20, 20-30)
   """
-  getProductos(id: ID): Producto
+  getProductos(limite: Int, offset: Int): [Producto]
+  """
+  Busqueda del producto por su Id
+  """
+  getProducto(id: ID): Producto
 }
 
 input ProductoInput {
@@ -24,4 +29,12 @@ type Mutation {
   Te permite crear nuevos productos
   """
   crearProducto(input: ProductoInput): Producto
+  """
+  Te permite actualizar un producto en especifico
+  """
+  actualizarProducto(input: ProductoInput): Producto
+  """
+  Te permite eliminar un producto en especifico
+  """
+  eliminarProducto(id: ID): String
 }

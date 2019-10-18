@@ -1,5 +1,14 @@
 // import mongoose from "mongoose";
 import Clientes from "../../models/clientes";
+import { createError } from "apollo-errors";
+
+//Funcion generica para mandar como mensaje cualquier error
+const Error = message => {
+  const FooError = createError("FooError", {
+    message
+  });
+  throw new FooError({});
+};
 
 export const ClienteResolvers = {
   Query: {
@@ -9,13 +18,18 @@ export const ClienteResolvers = {
         .skip(offset);
     },
 
-    getCliente: (root, { id }) => {
-      return new Promise((resolve, rejects) => {
-        Clientes.findById(id, (error, cliente) => {
-          if (error) return rejects(error);
-          else resolve(cliente);
-        });
-      });
+    //Funcion con async y await
+    getCliente: async (root, { id }) => {
+      try {
+        const cliente = await Clientes.findById({ _id: id });
+        return cliente;
+      } catch (error) {
+        if (error.name === "CastError") {
+          Error("Cliente no existente...!");
+        } else {
+          Error("Error Servidor");
+        }
+      }
     },
     totalClientes: root => {
       return new Promise((resolve, rejects) => {

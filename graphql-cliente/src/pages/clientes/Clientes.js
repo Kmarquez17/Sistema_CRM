@@ -11,7 +11,7 @@ import Buscador from "../../components/Buscador";
 class Clientes extends Component {
   state = {
     paginador: {
-      limite: 2,
+      limite: 10,
       pagActual: 1,
       offset: 0
     },
