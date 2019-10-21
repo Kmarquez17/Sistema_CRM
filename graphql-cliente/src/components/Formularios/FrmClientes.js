@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 
-class FormularioCliente extends Component {
+class FormularioClientes extends Component {
   render() {
     //Capturamos el error y verificar que no se haya activado, en la validacion de los campos
     const error = this.props.error;
@@ -17,10 +17,11 @@ class FormularioCliente extends Component {
         <div className="row justify-content-center">
           <form
             className="col-md-8 m-3"
-            onSubmit={e => {
+            onSubmit={this.props.handleSubmit}
+            /*onSubmit={e => {
               e.preventDefault();
               this.props.handleSubmit(this.props.accionMutation);
-            }}
+            }}*/
           >
             <div className="form-row">
               <div className="form-group col-md-6">
@@ -136,4 +137,4 @@ class FormularioCliente extends Component {
   }
 }
 
-export default FormularioCliente;
+export default FormularioClientes;

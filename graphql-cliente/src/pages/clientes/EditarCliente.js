@@ -4,9 +4,9 @@ import { Query, Mutation } from "react-apollo";
 import { CLIENTE_QUERY } from "../../queries/index";
 import { ACTUALIZAR_CLIENTE } from "../../mutations/index";
 
-import FormularioCliente from "../../components/Formularios/FormularioCliente";
+import FrmClientes from "../../components/Formularios/FrmClientes";
 
-class Formulario extends Component {
+class Cliente extends Component {
   state = {
     cliente: this.props.cliente,
     error: false
@@ -43,7 +43,8 @@ class Formulario extends Component {
     });
   };
 
-  handleSubmit = actualizarCliente => {
+  handleSubmit = (e, actualizarCliente) => {
+    e.preventDefault();
     //Sacamos el state para crear el input
     const {
       id,
@@ -92,8 +93,6 @@ class Formulario extends Component {
       tipo
     };
 
-    console.log(input);
-
     //Invocamos el el mutation y pasamos el input
     actualizarCliente({ variables: { input } });
   };
@@ -129,14 +128,16 @@ class Formulario extends Component {
         }
       >
         {actualizarCliente => (
-          <FormularioCliente
-            handleSubmit={this.handleSubmit}
+          <FrmClientes
+            handleSubmit={e => {
+              this.handleSubmit(e, actualizarCliente);
+            }}
             handleChange={this.handleChange}
             handleChangeEmails={this.handleChangeEmails}
             handleNuevoCampo={this.handleNuevoCampo}
             handleEliminarCampo={this.handleEliminarCampo}
             cliente={this.state.cliente}
-            accionMutation={actualizarCliente}
+            // accionMutation={actualizarCliente}
           />
         )}
       </Mutation>
@@ -153,7 +154,7 @@ class EditarCliente extends Component {
     const { id } = this.props.match.params;
     return (
       <Fragment>
-        <h2 className="text-center">Editar Clientes</h2>
+        <h2 className="text-center">Editar Cliente</h2>
         <Query query={CLIENTE_QUERY} variables={{ id }}>
           {({ loading, error, data, refetch }) => {
             if (loading) return "Cargando...!";
@@ -164,7 +165,7 @@ class EditarCliente extends Component {
               return <h5 className="text-center">{err}</h5>;
 
             return (
-              <Formulario
+              <Cliente
                 cliente={data.getCliente}
                 history={this.props.history}
                 refetch={refetch}

@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from "react";
-import { CREAR_CLIENTE } from "../../mutations/index";
 import { Mutation } from "react-apollo";
 
-import FormularioCliente from "../../components/Formularios/FormularioCliente";
+import { CREAR_CLIENTE } from "../../mutations/index";
+
+import FrmClientes from "../../components/Formularios/FrmClientes";
 class NuevoCliente extends Component {
   state = {
     cliente: {
@@ -47,7 +48,8 @@ class NuevoCliente extends Component {
     });
   };
 
-  handleSubmit = crearCliente => {
+  handleSubmit = (e, crearCliente) => {
+    e.preventDefault();
     //Sacamos el state para crear el input
     const {
       nombre,
@@ -68,7 +70,7 @@ class NuevoCliente extends Component {
     });
 
     // Validamos que los campos ingresados por el usuario no sean vacios
-    let edadInt = Number(edad)
+    let edadInt = Number(edad);
     if (
       nombre.trim() === "" ||
       apellido.trim() === "" ||
@@ -121,25 +123,31 @@ class NuevoCliente extends Component {
   render() {
     return (
       <Fragment>
-        <h2 className="text-center">Nuevo Clientes</h2>
+        <h2 className="text-center">Nuevo Cliente</h2>
 
         <Mutation
           mutation={CREAR_CLIENTE}
           //Redireccionamos a la pagina del listado de clientes
-          onCompleted={() => this.props.history.goBack()}
+          onCompleted={() => this.props.history.push("/")}
         >
-          {crearCliente => (
-            <FormularioCliente
-              handleSubmit={this.handleSubmit}
-              handleChange={this.handleChange}
-              handleChangeEmails={this.handleChangeEmails}
-              handleNuevoCampo={this.handleNuevoCampo}
-              handleEliminarCampo={this.handleEliminarCampo}
-              cliente={this.state.cliente}
-              accionMutation={crearCliente}
-              error={this.state.error}
-            />
-          )}
+          {(crearCliente, { loading, error }) => {
+            if (loading) return "Cargando...!";
+            if (error) return `Error ${error}`;
+            return (
+              <FrmClientes
+                handleSubmit={e => {
+                  this.handleSubmit(e, crearCliente);
+                }}
+                handleChange={this.handleChange}
+                handleChangeEmails={this.handleChangeEmails}
+                handleNuevoCampo={this.handleNuevoCampo}
+                handleEliminarCampo={this.handleEliminarCampo}
+                cliente={this.state.cliente}
+                // accionMutation={crearCliente}
+                error={this.state.error}
+              />
+            );
+          }}
         </Mutation>
       </Fragment>
     );

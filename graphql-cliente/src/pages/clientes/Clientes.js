@@ -18,23 +18,24 @@ class Clientes extends Component {
     filtro: ""
   };
 
-  paginaSiguiente = () => {
-    this.setState({
-      paginador: {
-        ...this.state.paginador,
-        offset: this.state.paginador.offset + this.state.paginador.limite,
-        pagActual: this.state.paginador.pagActual + 1
-      }
-    });
-  };
+  paginaSigAnt = accion => {
+    let resultado, pagActual;
+    debugger;
+    if (accion) {
+      resultado = this.state.paginador.offset + this.state.paginador.limite;
+      pagActual = this.state.paginador.pagActual + 1;
+    } else {
+      resultado = this.state.paginador.offset - this.state.paginador.limite;
+      pagActual = this.state.paginador.pagActual - 1;
+    }
 
-  paginaAnterior = () => {
     this.setState({
       paginador: {
         ...this.state.paginador,
-        offset: this.state.paginador.offset - this.state.paginador.limite,
-        pagActual: this.state.paginador.pagActual - 1
-      }
+        offset: resultado,
+        pagActual: pagActual
+      },
+      filtro: ""
     });
   };
 
@@ -115,7 +116,7 @@ class Clientes extends Component {
                               )}
                             </Mutation>
                             <Link
-                              to={`/cliente/editar/${id}`}
+                              to={`/clientes/editar/${id}`}
                               className="btn btn-success d-block d-md-inline-block"
                             >
                               Editar Cliente
@@ -131,8 +132,7 @@ class Clientes extends Component {
               <Paginador
                 pagActual={paginaActual}
                 paginas={cantidadPag}
-                paginaSiguiente={this.paginaSiguiente}
-                paginaAnterior={this.paginaAnterior}
+                paginaSigAnt={this.paginaSigAnt}
                 paginacionReinicio={this.paginacionReinicio}
               />
             </Fragment>

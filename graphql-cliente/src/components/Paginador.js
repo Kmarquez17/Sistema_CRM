@@ -7,8 +7,8 @@ class Paginador extends Component {
 
   static getDerivedStateFromProps(nextProps) {
     const { paginas, pagActual, paginacionReinicio } = nextProps;
-    console.log("CANT", paginas);
-    console.log("ACTUAL", pagActual);
+    // console.log("CANT", paginas);
+    // console.log("ACTUAL", pagActual);
     if (paginas < pagActual) {
       //Si la cantidad de paginas es menor a la actual, es por que se quedo en la ultima pagina por ende pasarlo
       // a la anterior
@@ -28,7 +28,10 @@ class Paginador extends Component {
         <button
           type="button"
           className="btn btn-success mr-2"
-          onClick={this.props.paginaAnterior}
+          onClick={() => {
+            //Si es false es la anterior pagina
+            this.props.paginaSigAnt(false);
+          }}
         >
           &laquo; Anterior
         </button>
@@ -40,7 +43,10 @@ class Paginador extends Component {
         <button
           type="button"
           className="btn btn-success"
-          onClick={this.props.paginaSiguiente}
+          onClick={() => {
+            //Si es true es la siguiente pagina
+            this.props.paginaSigAnt(true); 
+          }}
         >
           Siguiente &raquo;
         </button>
