@@ -45,14 +45,14 @@ class Paginador extends Component {
           className="btn btn-success"
           onClick={() => {
             //Si es true es la siguiente pagina
-            this.props.paginaSigAnt(true); 
+            this.props.paginaSigAnt(true);
           }}
         >
           Siguiente &raquo;
         </button>
       ) : null;
     return (
-      <div className="mt-5 d-flex justify-content-center">
+      <div className="mt-4 mb-4 d-flex justify-content-center">
         {btnAnterior}
         {btnSiguiente}
       </div>

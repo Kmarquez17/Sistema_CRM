@@ -29,6 +29,14 @@ export const ProductoResolvers = {
       //     else resolve(producto);
       //   });
       // });
+    },
+    totalProductos: async root => {
+      try {
+        const totalProd = await Productos.countDocuments({});
+        return totalProd;
+      } catch (error) {
+        return error;
+      }
     }
   },
   Mutation: {

@@ -15,6 +15,11 @@ type Query {
   Busqueda del producto por su Id
   """
   getProducto(id: ID): Producto
+
+  """
+  Total de prodcutos registrado en la base de datos
+  """
+  totalProductos : String
 }
 
 input ProductoInput {

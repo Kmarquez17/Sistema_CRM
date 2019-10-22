@@ -6,6 +6,7 @@ import { PRODUCTOS_QUERY } from "../../queries";
 import { ELIMINAR_PRODUCTO } from "../../mutations";
 
 import Exito from "../../components/Alertas/Exito";
+import Paginador from "../../components/Paginador";
 
 const initialState = {
   mostrar: false,
@@ -26,7 +27,6 @@ class Productos extends Component {
 
   paginaSigAnt = accion => {
     let resultado, pagActual;
-    debugger;
     if (accion) {
       resultado = this.state.paginador.offset + this.state.paginador.limite;
       pagActual = this.state.paginador.pagActual + 1;
@@ -61,21 +61,31 @@ class Productos extends Component {
     let alerta = mostrar ? <Exito mensaje={mensaje} /> : null;
 
     return (
-      <Fragment>
-        <h1 className="text-center mb-5">Listado de productos</h1>
-        {alerta}
-        <Query
-          query={PRODUCTOS_QUERY}
-          pollInterval={1000}
-          variables={{
-            limite: this.state.paginador.limite,
-            offset: this.state.paginador.offset
-          }}
-        >
-          {({ loading, error, data, startPolling, stopPolling }) => {
-            if (loading) return "Cargando...!";
-            if (error) return `Error : ${error}`;
-            return (
+      <Query
+        query={PRODUCTOS_QUERY}
+        pollInterval={1000}
+        variables={{
+          limite: this.state.paginador.limite,
+          offset: this.state.paginador.offset
+        }}
+      >
+        {({ loading, error, data, startPolling, stopPolling }) => {
+          if (loading) return "Cargando...!";
+          if (error) return `Error : ${error}`;
+
+          let cantidadPag = Math.ceil(
+            Number(data.totalProductos) / this.state.paginador.limite
+          );
+          let paginaActual =
+            cantidadPag > 0 ? this.state.paginador.pagActual : 0;
+
+          console.log(cantidadPag);
+          console.log(paginaActual);
+
+          return (
+            <Fragment>
+              <h1 className="text-center mb-5">Listado de productos</h1>
+              {alerta}
               <table className="table table-striped">
                 <thead>
                   <tr className="table-primary">
@@ -147,16 +157,17 @@ class Productos extends Component {
                   })}
                 </tbody>
               </table>
-            );
-          }}
-        </Query>
-        {/* <Paginador
-          pagActual={paginaActual}
-          paginas={cantidadPag}
-          paginaSigAnt={this.paginaSigAnt}
-          paginacionReinicio={this.paginacionReinicio}
-        /> */}
-      </Fragment>
+
+              <Paginador
+                pagActual={paginaActual}
+                paginas={cantidadPag}
+                paginaSigAnt={this.paginaSigAnt}
+                paginacionReinicio={this.paginacionReinicio}
+              />
+            </Fragment>
+          );
+        }}
+      </Query>
     );
   }
 }

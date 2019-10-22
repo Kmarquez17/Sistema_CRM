@@ -39,6 +39,7 @@ export const PRODUCTOS_QUERY = gql`
       precio
       stock
     }
+    totalProductos
   }
 `;
 
@@ -49,6 +50,7 @@ export const PRODUCTO_QUERY = gql`
       nombre
       precio
       stock
-    }
+    }  
+
   }
 `;
