@@ -5,8 +5,14 @@ import { Link } from "react-router-dom";
 import { CLIENTES_QUERY } from "../../queries";
 import { ELIMINAR_CLIENTE } from "../../mutations";
 
+import Exito from "../../components/Alertas/Exito";
 import Paginador from "../../components/Paginador";
 import Buscador from "../../components/Buscador";
+
+const initialState = {
+  mostrar: false,
+  mensaje: ""
+};
 
 class Clientes extends Component {
   state = {
@@ -15,7 +21,10 @@ class Clientes extends Component {
       pagActual: 1,
       offset: 0
     },
-    filtro: ""
+    filtro: "",
+    alerta: {
+      ...initialState
+    }
   };
 
   paginaSigAnt = accion => {
@@ -54,6 +63,11 @@ class Clientes extends Component {
   };
 
   render() {
+    const {
+      alerta: { mensaje, mostrar }
+    } = this.state;
+    
+    let alerta = mostrar ? <Exito mensaje={mensaje} /> : null;
     return (
       <Query
         query={CLIENTES_QUERY}
@@ -74,6 +88,7 @@ class Clientes extends Component {
           return (
             <Fragment>
               <h2 className="mt-2 text-center">Listados de Clientes</h2>
+              {alerta}
               <Buscador
                 label={"Clientes"}
                 handleChangeProps={this.handleChangeProps}
@@ -96,7 +111,28 @@ class Clientes extends Component {
                             {cliente.nombre} - {cliente.empresa}
                           </div>
                           <div className="col-md-4 d-flex justify-content-end">
-                            <Mutation mutation={ELIMINAR_CLIENTE}>
+                            <Mutation
+                              mutation={ELIMINAR_CLIENTE}
+                              onCompleted={data => {
+                                this.setState(
+                                  {
+                                    alerta: {
+                                      mostrar: true,
+                                      mensaje: data.eliminarCliente
+                                    }
+                                  },
+                                  () => {
+                                    setTimeout(() => {
+                                      this.setState({
+                                        alerta: {
+                                          ...initialState
+                                        }
+                                      });
+                                    }, 3000);
+                                  }
+                                );
+                              }}
+                            >
                               {eliminarCliente => (
                                 <button
                                   type="button"
