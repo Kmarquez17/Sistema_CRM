@@ -66,7 +66,7 @@ class Clientes extends Component {
     const {
       alerta: { mensaje, mostrar }
     } = this.state;
-    
+
     let alerta = mostrar ? <Exito mensaje={mensaje} /> : null;
     return (
       <Query
@@ -111,6 +111,12 @@ class Clientes extends Component {
                             {cliente.nombre} - {cliente.empresa}
                           </div>
                           <div className="col-md-4 d-flex justify-content-end">
+                            <Link
+                              to={`/pedidos/nuevo/${id}`}
+                              className="btn btn-warning d-block d-md-inline-block mr-2"
+                            >
+                              &#43; Pedidos
+                            </Link>
                             <Mutation
                               mutation={ELIMINAR_CLIENTE}
                               onCompleted={data => {

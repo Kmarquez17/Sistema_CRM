@@ -78,10 +78,7 @@ class Productos extends Component {
           );
           let paginaActual =
             cantidadPag > 0 ? this.state.paginador.pagActual : 0;
-
-          console.log(cantidadPag);
-          console.log(paginaActual);
-
+            
           return (
             <Fragment>
               <h1 className="text-center mb-5">Listado de productos</h1>

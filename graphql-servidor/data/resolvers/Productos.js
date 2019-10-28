@@ -9,7 +9,7 @@ export const ProductoResolvers = {
           .limit(limite)
           .skip(offset);
 
-        console.log(productos);
+        // console.log(productos);
         return productos;
       } catch (error) {
         return error;
