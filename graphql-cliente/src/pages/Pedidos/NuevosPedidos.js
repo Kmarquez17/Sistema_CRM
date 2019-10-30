@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { Query } from "react-apollo";
+import Select from "react-select";
+import Animated from "react-select/animated";
+
 import { CLIENTE_QUERY, PRODUCTOS_QUERY } from "../../queries/index";
 
 import Spinner from "../../components/Spinner/Spinner";
@@ -69,20 +72,190 @@ const DatosClientes = ({ id }) => {
   );
 };
 
-const InventarioProductos = () => {
-  return (
-    <Fragment>
-      <Query query={PRODUCTOS_QUERY}>
-        {({ loading, error, data }) => {
-          if (loading) return <Spinner />;
-          if (error) return `Error ${error}`;
-          console.log(data);
-          return <h3>Inventario de los Productos</h3>;
-        }}
-      </Query>
-    </Fragment>
-  );
-};
+class InventarioProductos extends Component {
+  state = {
+    productos: [],
+    total: 0
+  };
+
+  handleChange = productos => {
+    let productosAux = [];
+    //Validamos que el producto no sea nulo, esto pasa cuando se elimina el ultimo producto
+    if (productos !== null) {
+
+      //Si no es nulo sacamos la ultima posicion que tiene nuestro arreglo de productos
+      let posicion = productos.length;
+      
+      //Si es undefined es por que en el arreglo de objeto original no lleva el campo cantidad, automaticamente se 
+      //agrega en cero
+      if (productos[posicion - 1].cantidad === undefined) {
+        productos[posicion - 1].cantidad = Number(0);
+      }
+      //En caso contrario el anterior objeto del arreglo de prodcuto ya tenia, entonces no se modifica
+      console.log(productos);
+      productosAux = productos;
+    }
+    this.setState(
+      {
+        productos: productosAux
+      },
+      () => {
+        this.actualizarTotal();
+      }
+    );
+  };
+
+  /*Actualizamos el total de la cantidad de producto, esto puede pasa cuando se agregan o se eliminan */
+  actualizarTotal = () => {
+    let nuevoTotal = 0;
+
+    //leer el state del producto
+    let productos = this.state.productos;
+
+    //cuando los productos estan en 0
+    if (productos.length === 0) {
+      this.setState({
+        total: nuevoTotal
+      });
+      return;
+    }
+
+    //Realizar la operacion cantidad * precio
+    productos.map(
+      producto => (nuevoTotal += producto.cantidad * producto.precio)
+    );
+
+    this.setState({
+      total: nuevoTotal
+    });
+  };
+
+  actualizarStock = (cantidad, posicion) => {
+    //leer el state del producto
+    let productos = this.state.productos;
+
+    //actualizar la cantidad del producto
+    productos[posicion].cantidad = Number(cantidad);
+
+    //validamos
+
+    //agregamos al state
+    this.setState(
+      {
+        productos
+      },
+      () => {
+        this.actualizarTotal();
+      }
+    );
+  };
+
+  eliminarProducto = id => {
+    //Sacamos el producto por su id
+    const productos = this.state.productos.filter(
+      producto => producto.id !== id
+    );
+
+    //Actualizamo el state con los productos restantes
+    this.setState(
+      {
+        productos
+      },
+      () => {
+        this.actualizarTotal();
+      }
+    );
+  };
+  render() {
+    return (
+      <Fragment>
+        <Query query={PRODUCTOS_QUERY}>
+          {({ loading, error, data }) => {
+            if (loading) return <Spinner />;
+            if (error) return `Error ${error}`;
+            return (
+              <Fragment>
+                <h3 className="text-center">Seleccionar Artículos</h3>
+                <Select
+                  placeholder={"Seleccionar Productos"}
+                  isMulti={true}
+                  components={Animated()}
+                  options={data.getProductos}
+                  getOptionValue={options => options.id}
+                  getOptionLabel={options => options.nombre}
+                  value={this.state.productos}
+                  onChange={this.handleChange}
+                />
+
+                {this.state.productos.length === 0 ? null : (
+                  <Fragment>
+                    <h5 className="text-center my-3">Resumen y Cantidades</h5>
+                    <table className="table">
+                      <thead className="bg-success text-light">
+                        <tr className="font-weight-bold">
+                          <th>Producto</th>
+                          <th>Precio</th>
+                          <th>Inventario</th>
+                          <th>Cantidad</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.productos.map((producto, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <tr>
+                                <td>{producto.nombre}</td>
+                                <td>$ {producto.precio}</td>
+                                <td>{producto.stock}</td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    defaultValue="0"
+                                    min="0"
+                                    onChange={e =>
+                                      this.actualizarStock(
+                                        e.target.value,
+                                        index
+                                      )
+                                    }
+                                  />
+                                </td>
+                                <td>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger font-weight-bold"
+                                    onClick={e => {
+                                      this.eliminarProducto(producto.id);
+                                    }}
+                                  >
+                                    &times; Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            </Fragment>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+
+                    <p className="font-weight-bold float-right mt-3">
+                      Total:
+                      <span className="font-weight-normal">
+                        $ {this.state.total}
+                      </span>
+                    </p>
+                  </Fragment>
+                )}
+              </Fragment>
+            );
+          }}
+        </Query>
+      </Fragment>
+    );
+  }
+}
 
 class NuevosPedidos extends Component {
   render() {
