@@ -1,0 +1,44 @@
+type Pedido {
+  id: ID
+  pedido: [PedidoProducto]
+  total: Int
+  fecha: String
+  cliente: String
+  estado: EstadoPedido
+}
+
+type PedidoProducto {
+  id: ID
+  cantidad: Int
+}
+
+"""
+Asignamos los tipos estado del pedido
+"""
+enum EstadoPedido {
+  PENDIENTE
+  COMPLETADO
+  ANULADO
+}
+"""
+inputs de los datos que se requiere para pedidos
+"""
+input PedidoProductoInput {
+  id: ID
+  cantidad: Int!
+}
+input PedidoInput {
+  id: ID
+  pedido: [PedidoProductoInput]
+  total: Int!
+  fecha: String
+  cliente: ID
+  estado: EstadoPedido
+}
+
+type Mutation {
+  """
+  Te permite crear nuevos pedidos
+  """
+  crearPedido(input: PedidoInput): Pedido
+}

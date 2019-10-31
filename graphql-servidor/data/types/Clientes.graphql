@@ -7,17 +7,12 @@ type Cliente {
   email: String
   edad: Int
   tipo: TipoCliente
-  pedidos: [Pedido]
 }
 
 type Email {
   email: String
 }
 
-type Pedido {
-  producto: String
-  precio: Int
-}
 """
 Asigna la categoria del cliente
 """
@@ -27,7 +22,7 @@ enum TipoCliente {
 }
 
 """
-Query donde van los metodos de busquedas
+Query donde van los metodos de busquedas y filtrados de datos
 """
 type Query {
   """
@@ -49,16 +44,11 @@ type Query {
 
 
 """
-input asignacion de valores al tipo cliete
+inputs de los datos que se requiere para clientes
 """
 
 input EmailInput {
   email: String!
-}
-
-input PedidoInput {
-  producto: String!
-  precio: Int!
 }
 
 """
@@ -72,7 +62,6 @@ input ClienteInput {
   emails: [EmailInput]
   edad: Int!
   tipo: TipoCliente!
-  pedidos: [PedidoInput]
 }
 
 """

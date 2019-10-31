@@ -3,9 +3,14 @@ import Productos from "../../models/productos";
 
 export const ProductoResolvers = {
   Query: {
-    getProductos: async (root, { limite, offset }) => {
+    getProductos: async (root, { limite, offset, stock }) => {
+      let filtro;
+      if (stock) {
+        filtro = { stock: { $gt: 0 } };
+      }
+
       try {
-        const productos = await Productos.find({})
+        const productos = await Productos.find(filtro)
           .limit(limite)
           .skip(offset);
 

@@ -49,8 +49,8 @@ export const ClienteResolvers = {
         emails: input.emails,
         // email: input.email,
         edad: input.edad,
-        tipo: input.tipo,
-        pedidos: input.pedidos
+        tipo: input.tipo
+        // pedidos: input.pedidos
       });
       nuevoCliente.id = nuevoCliente._id;
 

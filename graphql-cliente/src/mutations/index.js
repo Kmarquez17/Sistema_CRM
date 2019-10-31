@@ -61,3 +61,18 @@ export const ELIMINAR_PRODUCTO = gql`
     eliminarProducto(id: $id)
   }
 `;
+
+export const CREAR_PEDIDO = gql`
+  mutation crearPedido($input: PedidoInput) {
+    crearPedido(input: $input) {
+      total
+      fecha
+      cliente
+      pedido {
+        id
+        cantidad
+      }
+      estado
+    }
+  }
+`;
