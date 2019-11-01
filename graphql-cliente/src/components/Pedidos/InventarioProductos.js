@@ -130,7 +130,6 @@ class InventarioProductos extends Component {
           {({ loading, error, data }) => {
             if (loading) return <Spinner />;
             if (error) return `Error ${error}`;
-            console.log(data.getProductos);
             return (
               <Fragment>
                 <h3 className="text-center">Seleccionar Artículos</h3>

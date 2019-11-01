@@ -20,8 +20,16 @@ enum EstadoPedido {
   COMPLETADO
   ANULADO
 }
+
 """
-inputs de los datos que se requiere para pedidos
+Extraemos los pedidos realizado por el cliente
+"""
+type Query {
+  getPedidosCliente(cliente: String): [Pedido]
+}
+
+"""
+Inputs de los datos que se requiere guardar para pedidos
 """
 input PedidoProductoInput {
   id: ID
@@ -41,4 +49,9 @@ type Mutation {
   Te permite crear nuevos pedidos
   """
   crearPedido(input: PedidoInput): Pedido
+
+  """
+  Actualizamos el estado del pedido
+  """
+  actualizarEstado(input: PedidoInput) : String
 }

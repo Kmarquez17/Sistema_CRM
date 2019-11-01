@@ -2,6 +2,17 @@ import Pedidos from "../../models/pedidos";
 import Productos from "../../models/productos";
 
 export const PedidosResolvers = {
+  Query: {
+    getPedidosCliente: async (root, { cliente }) => {
+      try {
+        const pedidos = await Pedidos.find({ cliente: cliente });
+
+        return pedidos;
+      } catch (error) {
+        return error;
+      }
+    }
+  },
   Mutation: {
     crearPedido: (root, { input }) => {
       const nuevoPedido = new Pedidos({
@@ -12,23 +23,8 @@ export const PedidosResolvers = {
         estado: "PENDIENTE"
       });
       nuevoPedido.id = nuevoPedido._id;
-      // console.log(nuevoPedido);
 
       return new Promise((resolve, rejects) => {
-        //recorrer y actualizar la cantidad del producto
-        input.pedido.forEach(pedido => {
-          Productos.updateOne(
-            { _id: pedido.id },
-            {
-              $inc: {
-                stock: -pedido.cantidad
-              }
-            },
-            function(error) {
-              if (error) return new Error(error);
-            }
-          );
-        });
         nuevoPedido.save(error => {
           if (error) rejects(error);
           else resolve(nuevoPedido);
@@ -41,6 +37,66 @@ export const PedidosResolvers = {
       // } catch (error) {
       //   return error;
       // }
+    },
+    actualizarEstado: async (root, { input }) => {
+      try {
+        let instruccion;
+        const { id, estado } = input;
+
+        //Traemos el estado anterior del pedido
+        //Ya que si esta en anulado y pasa a pediente vuelve a sumar
+        const estadoAnterior = await Pedidos.findOne({ _id: id });
+
+        if (estadoAnterior.estado === "PENDIENTE" && estado === "COMPLETADO") {
+          instruccion = "-";
+        } else if (
+          estadoAnterior.estado === "COMPLETADO" &&
+          estado === "PENDIENTE"
+        ) {
+          instruccion = "+";
+        } else if (
+          estadoAnterior.estado === "COMPLETADO" &&
+          estado === "ANULADO"
+        ) {
+          instruccion = "+";
+        } else if (
+          estadoAnterior.estado === "ANULADO" &&
+          estado === "COMPLETADO"
+        ) {
+          instruccion = "-";
+        } else {
+          return;
+        }
+
+        //recorrer y actualizar la cantidad del producto
+        input.pedido.forEach(pedido => {
+          Productos.updateOne(
+            { _id: pedido.id },
+            {
+              $inc: {
+                stock: `${instruccion}${pedido.cantidad}`
+              }
+            },
+            function(error) {
+              if (error) return new Error(error);
+            }
+          );
+        });
+
+        const pedidos = await Pedidos.findByIdAndUpdate(
+          { _id: input.id },
+          input,
+          {
+            new: true
+          }
+        );
+
+        let mensaje = "Se actualizo el estado del pedido correctamente...!";
+
+        return mensaje;
+      } catch (error) {
+        return error;
+      }
     }
   }
 };

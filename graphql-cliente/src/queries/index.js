@@ -50,7 +50,22 @@ export const PRODUCTO_QUERY = gql`
       nombre
       precio
       stock
-    }  
+    }
+  }
+`;
 
+//Pedidos del cliente
+export const PEDIDOS_CLIENTE_QUERY = gql`
+  query getPedidosCliente($cliente: String) {
+    getPedidosCliente(cliente: $cliente) {
+      id
+      total
+      fecha
+      estado
+      pedido {
+        id
+        cantidad
+      }
+    }
   }
 `;
