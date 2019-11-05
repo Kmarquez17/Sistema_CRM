@@ -12,6 +12,11 @@ type Email {
   email: String
 }
 
+type ClienteTotal {
+  total: Float
+  cliente: [Cliente]
+}
+
 """
 Asigna la categoria del cliente
 """
@@ -25,27 +30,29 @@ Query donde van los metodos de busquedas y filtrados de datos
 """
 type Query {
   """
-    Busquedas total o extarer cierta cantidad de clientes
+  Busquedas total o extarer cierta cantidad de clientes
   """
   getClientes(limite: Int, offset: Int): [Cliente]
 
   """
-    Busqueda del cliente por su Id
+  Busqueda del cliente por su Id
   """
   getCliente(id: ID): Cliente
 
+  """
+  Nos permite obtener las cantidad total de todos los clientes
+  """
+  totalClientes: String
 
   """
-    Nos permite obtener las cantidad total de todos los clientes
+  Extraemos el TOP 10 de los mejores clientes
   """
-  totalClientes : String
+  getTopClientes: [ClienteTotal]
 }
-
 
 """
 inputs de los datos que se requiere para clientes
 """
-
 input EmailInput {
   email: String!
 }

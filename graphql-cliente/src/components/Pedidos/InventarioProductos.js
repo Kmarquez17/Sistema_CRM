@@ -2,14 +2,12 @@ import React, { Component, Fragment } from "react";
 import { Mutation, Query } from "react-apollo";
 import Select from "react-select";
 import Animated from "react-select/animated";
-
-
+import { withRouter } from "react-router-dom";
 import { PRODUCTOS_QUERY } from "../../queries/index";
 import { CREAR_PEDIDO } from "../../mutations/index";
 
 import Spinner from "../../components/Spinner";
 import Error from "../../components/Alertas/Error";
-
 
 class InventarioProductos extends Component {
   state = {
@@ -112,7 +110,7 @@ class InventarioProductos extends Component {
       }
     );
   };
-  
+
   render() {
     const mensaje =
       this.state.total < 0 ? (
@@ -211,7 +209,10 @@ class InventarioProductos extends Component {
 
                     {/* Se activara el boton hasta que haya un total mayor a cero */}
                     {this.state.total > 0 ? (
-                      <Mutation mutation={CREAR_PEDIDO}>
+                      <Mutation
+                        mutation={CREAR_PEDIDO}
+                        onCompleted={() => this.props.history.push("/clientes")}
+                      >
                         {crearPedido => (
                           <button
                             type="button"
@@ -247,4 +248,4 @@ class InventarioProductos extends Component {
   }
 }
 
-export default InventarioProductos;
+export default withRouter(InventarioProductos);

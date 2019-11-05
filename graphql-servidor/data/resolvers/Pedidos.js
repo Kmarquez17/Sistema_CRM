@@ -11,6 +11,43 @@ export const PedidosResolvers = {
       } catch (error) {
         return error;
       }
+    },
+    getTopClientes: async root => {
+      try {
+        const topClientes = await Pedidos.aggregate([
+          {
+            $match: {
+              estado: "COMPLETADO"
+            }
+          },
+          {
+            $group: {
+              _id: "$cliente",
+              total: { $sum: "$total" }
+            }
+          },
+          {
+            $lookup: {
+              from: "clientes",
+              localField: "_id",
+              foreignField: "_id",
+              as: "cliente"
+            }
+          },
+          {
+            $sort: {
+              total: -1
+            }
+          },
+          {
+            $limit: 10
+          }
+        ]);        
+       
+        return topClientes;
+      } catch (error) {
+        return error;
+      }
     }
   },
   Mutation: {

@@ -25,7 +25,7 @@ enum EstadoPedido {
 Extraemos los pedidos realizado por el cliente
 """
 type Query {
-  getPedidosCliente(cliente: String): [Pedido]
+  getPedidosCliente(cliente: ID): [Pedido]
 }
 
 """

@@ -83,7 +83,7 @@ class Productos extends Component {
             <Fragment>
               <h1 className="text-center mb-5">Listado de productos</h1>
               {alerta}
-              <table className="table table-striped">
+              <table className="table ">
                 <thead>
                   <tr className="table-primary">
                     <th scope="col">Nombre</th>
@@ -94,9 +94,18 @@ class Productos extends Component {
                 </thead>
                 <tbody>
                   {data.getProductos.map(producto => {
-                    const { id } = producto;
+                    const { id, stock } = producto;
+
+                    let clase;
+
+                    if (stock < 20) {
+                      clase = "text-light table-danger";
+                    } else if (stock > 21 && stock < 5|0) {
+                      clase = "table-warning";
+                    }
+
                     return (
-                      <tr key={id}>
+                      <tr key={id} className={clase}>
                         <td>{producto.nombre}</td>
                         <td>{producto.precio}</td>
                         <td>{producto.stock}</td>
