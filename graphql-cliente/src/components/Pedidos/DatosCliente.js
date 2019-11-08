@@ -8,7 +8,7 @@ const DatosClientes = ({ id }) => {
   return (
     <Fragment>
       <h3 className="text-center mb-3">Resumen del Cliente</h3>
-      <Query query={CLIENTE_QUERY} variables={{ id }} pollInterval={500}>
+      <Query query={CLIENTE_QUERY} variables={{ id }} pollInterval={5000}>
         {({ loading, error, data, startPolling, stopPolling }) => {
           if (loading) return <Spinner />;
           const err = error

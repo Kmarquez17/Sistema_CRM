@@ -23,8 +23,6 @@ class InventarioProductos extends Component {
         //Si no es nulo sacamos la ultima posicion que tiene nuestro arreglo de productos
         let posicion = productos.length;
 
-        console.log(posicion);
-
         //Si es undefined es por que en el arreglo de objeto original no lleva el campo cantidad, automaticamente se
         //agrega en cero
         if (productos[posicion - 1].cantidad === undefined) {
@@ -91,7 +89,6 @@ class InventarioProductos extends Component {
     //Cuando se elimina un producto se resetea la cantidad
     const auxProd = this.state.productos;
     delete auxProd[posicion].cantidad;
-    console.log(auxProd);
 
     this.setState({ productos: auxProd });
 
@@ -114,18 +111,18 @@ class InventarioProductos extends Component {
   render() {
     const mensaje =
       this.state.total < 0 ? (
-        <Error mensaje="Las cantidades de los productos no pueden ser negativas" />
+        <Error error="Las cantidades de los productos no pueden ser negativas" />
       ) : null;
     return (
       <Fragment>
         <Query
           query={PRODUCTOS_QUERY}
-          pollInterval={100}
+          pollInterval={5000}
           variables={{
             stock: true
           }}
         >
-          {({ loading, error, data }) => {
+          {({ loading, error, data, startPolling, stopPolling }) => {
             if (loading) return <Spinner />;
             if (error) return `Error ${error}`;
             return (
@@ -222,12 +219,13 @@ class InventarioProductos extends Component {
                                 ({ nombre, precio, stock, ...objeto }) => objeto
                               );
 
-                              console.log(productosInput);
                               const input = {
                                 pedido: productosInput,
                                 total: this.state.total,
                                 cliente: this.props.idCliente
                               };
+
+                              console.log(input);
 
                               crearPedido({ variables: { input } });
                             }}

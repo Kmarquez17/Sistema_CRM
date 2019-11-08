@@ -8,6 +8,7 @@ import { ELIMINAR_CLIENTE } from "../../mutations";
 import Exito from "../../components/Alertas/Exito";
 import Paginador from "../../components/Paginador";
 import Buscador from "../../components/Buscador";
+import Spinner from "../../components/Spinner";
 
 const initialState = {
   mostrar: false,
@@ -63,22 +64,28 @@ class Clientes extends Component {
   };
 
   render() {
+    //Alertas
     const {
       alerta: { mensaje, mostrar }
     } = this.state;
 
     let alerta = mostrar ? <Exito mensaje={mensaje} /> : null;
+
+    //Obtiene el Id del vendedor para obtener sus clientes
+    // const id = this.props.session.getUsuario.id;
+
     return (
       <Query
         query={CLIENTES_QUERY}
-        pollInterval={1000}
+        pollInterval={5000}
         variables={{
           limite: this.state.paginador.limite,
           offset: this.state.paginador.offset
+          // vendedor: id
         }}
       >
         {({ loading, error, data, startPolling, stopPolling }) => {
-          if (loading) return "Cargando...!";
+          if (loading) return <Spinner />;
           if (error) return `Error : ${error}`;
           let cantidadPag = Math.ceil(
             Number(data.totalClientes) / this.state.paginador.limite

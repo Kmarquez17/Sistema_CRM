@@ -80,3 +80,15 @@ export const TOP_CLIENTES_PEDIDOS = gql`
     }
   }
 `;
+
+//Usuarios
+export const USUARIO_ACTUAL = gql`
+  query getUsuario {
+    getUsuario {
+      id
+      usuario
+      nombre
+      rol
+    }
+  }
+`;

@@ -3,6 +3,7 @@ import { Query, Mutation } from "react-apollo";
 import { PRODUCTO_QUERY } from "../../queries";
 import FrmProductos from "../../components/Formularios/FrmProductos";
 import { ACTUALIZAR_PRODUCTO } from "../../mutations";
+import Spinner from "../../components/Spinner";
 
 const initialState = {
   nombre: "",
@@ -57,7 +58,7 @@ class Producto extends Component {
         }
       >
         {(actualizarProducto, { loading, error }) => {
-          if (loading) return "Cargando...!";
+          if (loading) return <Spinner />;
           if (error) return `Error ${error}`;
           return (
             <FrmProductos
@@ -85,7 +86,7 @@ class Productos extends Component {
         <h1 className="text-center">Editar Producto</h1>
         <Query query={PRODUCTO_QUERY} variables={{ id }}>
           {({ loading, error, data, refetch }) => {
-            if (loading) return "Cargando...!";
+            if (loading) return <Spinner />;
             if (error) return `Error ${error}`;
             return (
               <Producto

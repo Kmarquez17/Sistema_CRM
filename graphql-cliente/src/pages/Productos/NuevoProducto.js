@@ -3,6 +3,7 @@ import { Mutation } from "react-apollo";
 
 import { CREAR_PRODUCTO } from "../../mutations";
 import FrmProductos from "../../components/Formularios/FrmProductos";
+import Spinner from "../../components/Spinner";
 
 const initialState = {
   nombre: "",
@@ -47,14 +48,14 @@ class Productos extends Component {
     };
     return (
       <Fragment>
-        <h2 className="text-center">Nuevo Producto</h2>
+        <h2 className="text-center mb-5">Nuevo Producto</h2>
         <Mutation
           mutation={CREAR_PRODUCTO}
           variables={{ input }}
           onCompleted={() => this.props.history.push("/productos")}
         >
           {(crearProducto, { loading, error }) => {
-            if (loading) return "Cargando...!";
+            if (loading) return <Spinner />;
             if (error) return `Error ${error}`;
             return (
               <FrmProductos

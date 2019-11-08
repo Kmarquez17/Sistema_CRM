@@ -7,6 +7,7 @@ import { ELIMINAR_PRODUCTO } from "../../mutations";
 
 import Exito from "../../components/Alertas/Exito";
 import Paginador from "../../components/Paginador";
+import Spinner from "../../components/Spinner";
 
 const initialState = {
   mostrar: false,
@@ -70,7 +71,7 @@ class Productos extends Component {
         }}
       >
         {({ loading, error, data, startPolling, stopPolling }) => {
-          if (loading) return "Cargando...!";
+          if (loading) return <Spinner />;
           if (error) return `Error : ${error}`;
 
           let cantidadPag = Math.ceil(
@@ -100,7 +101,7 @@ class Productos extends Component {
 
                     if (stock < 20) {
                       clase = "text-light table-danger";
-                    } else if (stock > 21 && stock < 5|0) {
+                    } else if (stock > 21 && (stock < 5) | 0) {
                       clase = "table-warning";
                     }
 

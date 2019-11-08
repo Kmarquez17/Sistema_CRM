@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { Mutation } from "react-apollo";
+import { withRouter } from "react-router-dom";
 
 import { CREAR_CLIENTE } from "../../mutations/index";
 
 import FrmClientes from "../../components/Formularios/FrmClientes";
+import Spinner from "../../components/Spinner";
 class NuevoCliente extends Component {
   state = {
     cliente: {
@@ -50,6 +52,10 @@ class NuevoCliente extends Component {
 
   handleSubmit = (e, crearCliente) => {
     e.preventDefault();
+
+    //Sacamos el id del vendedor
+    const idVendedor = this.props.session.getUsuario.id;   
+
     //Sacamos el state para crear el input
     const {
       nombre,
@@ -93,7 +99,8 @@ class NuevoCliente extends Component {
       empresa,
       emails,
       edad: edadInt,
-      tipo
+      tipo,
+      vendedor: idVendedor
     };
 
     //Invocamos el el mutation y pasamos el input
@@ -120,18 +127,18 @@ class NuevoCliente extends Component {
     });
   };
 
-  render() {
+  render() { 
     return (
       <Fragment>
-        <h2 className="text-center">Nuevo Cliente</h2>
+        <h2 className="text-center mb-5">Nuevo Cliente</h2>
 
         <Mutation
           mutation={CREAR_CLIENTE}
           //Redireccionamos a la pagina del listado de clientes
-          onCompleted={() => this.props.history.push("/")}
+          onCompleted={() => this.props.history.push("/clientes")}
         >
           {(crearCliente, { loading, error }) => {
-            if (loading) return "Cargando...!";
+            if (loading) return <Spinner />;
             if (error) return `Error ${error}`;
             return (
               <FrmClientes
@@ -154,4 +161,4 @@ class NuevoCliente extends Component {
   }
 }
 
-export default NuevoCliente;
+export default withRouter(NuevoCliente);

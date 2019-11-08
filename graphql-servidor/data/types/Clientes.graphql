@@ -6,6 +6,7 @@ type Cliente {
   emails: [Email]
   edad: Int
   tipo: TipoCliente
+  vendedor: ID
 }
 
 type Email {
@@ -68,6 +69,7 @@ input ClienteInput {
   emails: [EmailInput]
   edad: Int!
   tipo: TipoCliente!
+  vendedor: ID!
 }
 
 """

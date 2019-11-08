@@ -1,6 +1,9 @@
 // import mongoose from "mongoose";
 import Clientes from "../../models/clientes";
 import { createError } from "apollo-errors";
+import mongoose from "mongoose";
+
+const ObjectId = mongoose.Types.ObjectId;
 
 //Funcion generica para mandar como mensaje cualquier error
 const Error = message => {
@@ -12,8 +15,17 @@ const Error = message => {
 
 export const ClienteResolvers = {
   Query: {
-    getClientes: (root, { limite, offset }) => {
-      return Clientes.find({})
+    getClientes: (root, { limite, offset }, { usuarioActual }) => {
+      let filtro;
+
+      if (!usuarioActual) {
+        throw new Error("¡No estás autenticado!");
+      } else {
+        if (usuarioActual.rol === "VENDEDOR") {
+          filtro = { vendedor: new ObjectId(usuarioActual._id) };
+        }
+      }
+      return Clientes.find(filtro)
         .limit(limite)
         .skip(offset);
     },
@@ -49,8 +61,8 @@ export const ClienteResolvers = {
         emails: input.emails,
         // email: input.email,
         edad: input.edad,
-        tipo: input.tipo
-        // pedidos: input.pedidos
+        tipo: input.tipo,
+        vendedor: input.vendedor
       });
       nuevoCliente.id = nuevoCliente._id;
 

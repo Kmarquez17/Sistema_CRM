@@ -4,6 +4,8 @@ import DatosCliente from "../../components/Pedidos/DatosCliente";
 class NuevosPedidos extends Component {
   render() {
     const { id } = this.props.match.params;
+    // Se manda el id al componente InventarioProductos para hacer referencia al usuario que haga 
+    // el pedido
     return (
       <Fragment>
         <h1 className="text-center mb-5">Pedidos</h1>

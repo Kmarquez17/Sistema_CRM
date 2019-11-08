@@ -5,6 +5,7 @@ import { CLIENTE_QUERY } from "../../queries/index";
 import { ACTUALIZAR_CLIENTE } from "../../mutations/index";
 
 import FrmClientes from "../../components/Formularios/FrmClientes";
+import Spinner from "../../components/Spinner";
 
 class Cliente extends Component {
   state = {
@@ -157,7 +158,7 @@ class EditarCliente extends Component {
         <h2 className="text-center">Editar Cliente</h2>
         <Query query={CLIENTE_QUERY} variables={{ id }}>
           {({ loading, error, data, refetch }) => {
-            if (loading) return "Cargando...!";
+            if (loading) return <Spinner/>;
             const err = error
               ? error.graphQLErrors[0].message
               : "Cliente no existente...!";

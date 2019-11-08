@@ -1,0 +1,34 @@
+type Usuario {
+  usuario: String
+  id: ID
+  nombre: String
+  rol: String
+}
+
+type Token {
+  token: String!
+}
+
+type Query {
+  """
+  Permite consultar el usuario a base del Token
+  """
+  getUsuario: Usuario
+}
+
+type Mutation {
+  """
+  Te permite crear los usuarios
+  """
+  crearUsuario(
+    usuario: String!
+    nombre: String!
+    password: String!
+    rol: String!
+  ): String
+
+  """
+  Te permite autentificar el usuario para acceder al sistema
+  """
+  autentificarUsuario(usuario: String!, password: String!): Token
+}

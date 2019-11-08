@@ -7,7 +7,8 @@ const clientesSchema = new Schema({
   emails: { type: Array, maxlength: 50, required: true },
   edad: { type: Number, required: true },
   tipo: { type: String, maxlength: 50, required: true },
-  pedidos: { type: Array, required: true }
+  pedidos: { type: Array, required: true },
+  vendedor: mongoose.Types.ObjectId
 });
 
 export default mongoose.model("clientes", clientesSchema);
